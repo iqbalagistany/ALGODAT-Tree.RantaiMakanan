@@ -1,10 +1,30 @@
 package UASsmt2;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class ProjectUAS {
 
     Node root;
+
+    class Node {
+
+        int key;
+        String nama;
+
+        Node right;
+        Node left;
+        int data;
+
+        Node(int key, String nama) {
+            this.key = key;
+            this.nama = nama;
+        }
+
+        @Override
+        public String toString() {
+            return "nomor " + key + " " + "adalah" + " " + nama;
+        }
+    }
 
     public void addNode(int key, String nama) {
 
@@ -13,21 +33,21 @@ public class ProjectUAS {
         if (root == null) {
             root = newNode;
         } else {
-            Node iniNode = root;
+            Node Node = root;
 
             Node parent;
             while (true) {
-                parent = iniNode;
-                if (key < iniNode.key) {
-                    iniNode = iniNode.leftChild;
-                    if (iniNode == null) {
-                        parent.leftChild = newNode;
+                parent = Node;
+                if (key < Node.key) {
+                    Node = Node.left;
+                    if (Node == null) {
+                        parent.left = newNode;
                         return;
                     }
                 } else {
-                    iniNode = iniNode.rightChild;
-                    if (iniNode == null) {
-                        parent.rightChild = newNode;
+                    Node = Node.right;
+                    if (Node == null) {
+                        parent.right = newNode;
                         return;
                     }
                 }
@@ -37,50 +57,123 @@ public class ProjectUAS {
         }
     }
 
-    public Node cariNode(int key) {
-        Node iniNode = root;
+    private Node cariNode(int key) {
+        Node Node = root;
 
-        while (iniNode.key != key) {
-            if (key < iniNode.key) {
-                iniNode = iniNode.leftChild;
+        while (Node.key != key) {
+            if (key < Node.key) {
+                Node = Node.left;
             } else {
-                iniNode = iniNode.rightChild;
+                Node = Node.right;
             }
-            if (iniNode == null) {
+            if (Node == null) {
                 return null;
             }
         }
-        return iniNode;
+        return Node;
+    }
+    
+
+    private void cariKey(int key) {
+        Node Node = root;
+        int i = 0;
+        while (Node.key != key) {
+            if (key < Node.key) {
+                i++;
+                Node = Node.left;
+            } else {
+                i++;
+                Node = Node.right;
+            }
+            if (Node == null) {
+                if (i > 3) {
+                    break;
+                }
+
+            }
+        }
+        if (i > 3) {
+            System.out.println("Tidak ada dalam rantai makanan");
+        } else if (i == 0) {
+            System.out.println("Merupakan Produsen");
+        } else if (i == 3) {
+            System.out.println("Konsumen Puncak");
+        } else {
+            System.out.println("Konsumen ke: " + i);
+        }
     }
 
-    public void postOrder(Node iniNode) {
-        if (iniNode != null) {
-            postOrder(iniNode.leftChild);
-            postOrder(iniNode.rightChild);
-
-            System.out.println(iniNode);
+    private static void postOrder(Node Node) {
+        if (Node != null) {
+            postOrder(Node.left);
+            postOrder(Node.right);
+            System.out.println(Node);
         }
 
     }
 
-    public void inOrder(Node iniNode) {
-        if (iniNode != null) {
-            inOrder(iniNode.leftChild);
-            System.out.println(iniNode);
-            inOrder(iniNode.rightChild);
+    private static void inOrder(Node Node) {
+        if (Node != null) {
+            inOrder(Node.left);
+            System.out.println(Node);
+            inOrder(Node.right);
 
         }
 
     }
 
-    public void preOrder(Node iniNode) {
-        if (iniNode != null) {
-            System.out.println(iniNode);
-            preOrder(iniNode.leftChild);
-            preOrder(iniNode.rightChild);
+    private static void preOrder(Node Node) {
+        if (Node != null) {
+            System.out.println(Node);
+            preOrder(Node.left);
+            preOrder(Node.right);
 
         }
 
+    }
+
+    //Get minimum element in binary search tree
+    private static Node minimumElement(Node root) {
+        if (root.left == null) {
+            return root;
+        } else {
+            return minimumElement(root.left);
+        }
+    }
+
+    private static Node deleteNode(Node root, int value) {
+        if (root == null) {
+            return null;
+        }
+        if (root.data > value) {
+            root.left = deleteNode(root.left, value);
+        } else if (root.data < value) {
+            root.right = deleteNode(root.right, value);
+
+        } else {
+            // if nodeToBeDeleted have both children
+            if (root.left != null && root.right != null) {
+                Node temp = root;
+                // Finding minimum element from right
+                Node minNodeForRight = minimumElement(temp.right);
+                // Replacing current node with minimum node from right subtree
+                root.data = minNodeForRight.data;
+                // Deleting minimum node from right now
+                root.right = deleteNode(root.right, minNodeForRight.data);
+
+            } // if nodeToBeDeleted has only left child
+            else if (root.left != null) {
+                root = root.left;
+            } // if nodeToBeDeleted has only right child
+            else if (root.right != null) {
+                root = root.right;
+            } // if nodeToBeDeleted do not have child (Leaf node)
+            else {
+                root = null;
+            }
+        }
+        postOrder(root);
+        return root;
     }
 
     public static void main(String[] args) {
@@ -90,14 +183,15 @@ public class ProjectUAS {
         boolean flag = true;
 
         ProjectUAS Tree = new ProjectUAS();
+
         Tree.addNode(50, "Padi");
         Tree.addNode(25, "Ayam");
-        Tree.addNode(10, "Ular");
+        Tree.addNode(8, "Ular");
         Tree.addNode(3, "Serigala");
-        Tree.addNode(8, "Harimau");
-        Tree.addNode(15, "Musang");
-        Tree.addNode(12, "Macan");
-        Tree.addNode(30, "Singa");
+        Tree.addNode(10, "Harimau");
+        Tree.addNode(30, "Musang");
+        Tree.addNode(27, "Macan");
+        Tree.addNode(35, "Singa");
         Tree.addNode(75, "Belalang");
         Tree.addNode(60, "Katak");
         Tree.addNode(85, "Biawak");
@@ -110,12 +204,11 @@ public class ProjectUAS {
             System.out.println("HELLO!!");
             System.out.println("Selamat Datang di Aplikasi Rantai Makanan");
             System.out.println("Kalian Bisa Memilih pilihan di bawah ini:");
-            System.out.println("1) Mencari Hewan");
-            System.out.println("2) Melihat Keseluruhan Rantai Makanan");
+            System.out.println("1) Melihat Keseluruhan Rantai Makanan");
+            System.out.println("2) Mencari Hewan");
             System.out.println("3) Mencari Tingkatan Konsumen");
-            System.out.println("4) Update Hewan");
-            System.out.println("5) Menghapus Hewan");
-            System.out.println("6) Keluar");
+            System.out.println("4) Menghapus Hewan");
+            System.out.println("5) Keluar");
             System.out.println("\n");
 
             System.out.print("Silahkan masukkan pilihan anda: ");
@@ -125,23 +218,12 @@ public class ProjectUAS {
 
                 case 1:
                     do {
-                        System.out.print("Masukkan nomor: ");
-                        no = input.nextInt();
-                        System.out.println(Tree.cariNode(no));
-
-                        System.out.println("\n");
-                        flag = false;
-                    } while (flag == true);
-                    break;
-
-                case 2:
-                    do {
                         System.out.println("Ada 3 Pilihan tampilan:");
                         System.out.println("1) Post Order");
                         System.out.println("2) In Order");
                         System.out.println("3) Pre Order");
                         System.out.println("4) Keluar");
-                        
+
                         System.out.print("Silahkan masukkan pilihan anda: ");
                         pil = input.nextByte();
 
@@ -174,11 +256,9 @@ public class ProjectUAS {
                                 } while (flag == true);
                                 break;
 
-                                
                             case 4:
                                 System.exit(0);
-                                
-                                
+
                             default:
                                 System.out.println("\n");
                                 System.out.println("Salah Inputan!");
@@ -190,19 +270,39 @@ public class ProjectUAS {
 
                     break;
 
+                case 2:
+                    do {
+                        System.out.print("Masukkan nomor: ");
+                        no = input.nextInt();
+                        System.out.println(Tree.cariNode(no));
+
+                        System.out.println("\n");
+                        flag = false;
+                    } while (flag == true);
+                    break;
+
                 case 3:
                     System.out.println("\n");
+                    do {
+                        System.out.print("Masukkan nomor: ");
+                        no = input.nextInt();
+                        Tree.cariKey(no);
+
+                        System.out.println("\n");
+                        flag = false;
+                    } while (flag == true);
+
                     break;
 
                 case 4:
+                    System.out.print("Masukkan nomor: ");
+                    no = input.nextInt();
+                    Tree.deleteNode(Tree.root, no);
+                        
                     System.out.println("\n");
                     break;
 
                 case 5:
-                    System.out.println("\n");
-                    break;
-
-                case 6:
                     System.exit(0);
 
                 default:
@@ -216,22 +316,4 @@ public class ProjectUAS {
 
     }
 
-    class Node {
-
-        int key;
-        String nama;
-
-        Node rightChild;
-        Node leftChild;
-
-        Node(int key, String nama) {
-            this.key = key;
-            this.nama = nama;
-        }
-
-        @Override
-        public String toString() {
-            return "nomor " + key + " " + "adalah" + " " + nama;
-        }
-    }
 }
