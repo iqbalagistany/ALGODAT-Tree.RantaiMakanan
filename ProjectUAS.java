@@ -15,6 +15,10 @@ public class ProjectUAS {
         Node left;
         int data;
 
+        Node(int data) {
+            this.data = data;
+        }
+
         Node(int key, String nama) {
             this.key = key;
             this.nama = nama;
@@ -72,9 +76,8 @@ public class ProjectUAS {
         }
         return Node;
     }
-    
 
-    private void cariKey(int key) {
+    private void cariKonsumen(int key) {
         Node Node = root;
         int i = 0;
         while (Node.key != key) {
@@ -89,7 +92,6 @@ public class ProjectUAS {
                 if (i > 3) {
                     break;
                 }
-
             }
         }
         if (i > 3) {
@@ -132,7 +134,7 @@ public class ProjectUAS {
 
     }
 
-    //Get minimum element in binary search tree
+    //Cari nilai minimum
     private static Node minimumElement(Node root) {
         if (root.left == null) {
             return root;
@@ -151,28 +153,21 @@ public class ProjectUAS {
             root.right = deleteNode(root.right, value);
 
         } else {
-            // if nodeToBeDeleted have both children
+            // Kalo punya 2 Child (kiri & kanan)
             if (root.left != null && root.right != null) {
-                Node temp = root;
-                // Finding minimum element from right
-                Node minNodeForRight = minimumElement(temp.right);
-                // Replacing current node with minimum node from right subtree
+                Node anu = root;
+                // Cari dulu minimum Child dari subtree di kanan
+                Node minNodeForRight = minimumElement(anu.right);
+                // Ganti node yang tadi pakai node minimum pada subtree kanan
                 root.data = minNodeForRight.data;
-                // Deleting minimum node from right now
+                // Delete minimum node yang ada di kanan
                 root.right = deleteNode(root.right, minNodeForRight.data);
 
-            } // if nodeToBeDeleted has only left child
-            else if (root.left != null) {
-                root = root.left;
-            } // if nodeToBeDeleted has only right child
-            else if (root.right != null) {
-                root = root.right;
-            } // if nodeToBeDeleted do not have child (Leaf node)
+            } // Kalo ga ada Child (Leaf node)
             else {
                 root = null;
             }
         }
-        postOrder(root);
         return root;
     }
 
@@ -286,7 +281,7 @@ public class ProjectUAS {
                     do {
                         System.out.print("Masukkan nomor: ");
                         no = input.nextInt();
-                        Tree.cariKey(no);
+                        Tree.cariKonsumen(no);
 
                         System.out.println("\n");
                         flag = false;
@@ -298,7 +293,7 @@ public class ProjectUAS {
                     System.out.print("Masukkan nomor: ");
                     no = input.nextInt();
                     Tree.deleteNode(Tree.root, no);
-                        
+
                     System.out.println("\n");
                     break;
 
