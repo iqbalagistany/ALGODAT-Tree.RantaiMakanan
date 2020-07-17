@@ -13,11 +13,6 @@ public class BstNode {
 
         Node right;
         Node left;
-        int data;
-
-        Node(int data) {
-            this.data = data;
-        }
 
         Node(int key, String nama) {
             this.key = key;
@@ -131,27 +126,16 @@ public class BstNode {
     }
 
     private static Node deleteNode(Node root, int value) {
-        //gunakan temporary variable untuk menyimpan nilai node aslinya 
-        //(karena nilai dari node aslinya akan kita manipulasi)
         Node tempNode = root;
-        //Melakukan pengecekan jika key nodenya sama dengan value(key dari node yang mau di hapus) 
-        //maka hapus root yang asli
+
         if (root.key == value) {
             return root = null;
         } else if (value < root.key) {
             try {
-                //kemudian jika ternyata valuenya lebih kecil dari root keynya berarti treenya masuk ke arah kiri
-                //sebelum pindah ke kiri kita akan periksa terlebih dahulu apakah key di root kiri == value? jika iya 
-                //maka hapus root kiri yang asli
-
-                //karena kita sudah memiliki temporary variable, gunakan variable tersebut untuk mengakses node kiri 
-                //yang sebelumnya di hapus
                 if (root.left.key == value) {
                     deleteNode(tempNode.left, value);
                     return root.left = null;
                 }
-                //sedangkan jika ternyata key dari root kiri != value maka kita tidak perlu menghapus root kiri 
-                //yang aslinya
                 return deleteNode(tempNode.left, value);
             } catch (Exception e) {
                 System.out.println("Tidak ada dalam Rantai Makanan");
@@ -159,14 +143,13 @@ public class BstNode {
             }
         } else {
             try {
-                //yang kanan sama kayak yang kiri
                 if (root.right.key == value) {
                     deleteNode(tempNode.right, value);
                     return root.right = null;
                 }
                 return deleteNode(tempNode.right, value);
             } catch (Exception e) {
-                System.out.println("Nomor yang anda ingin hapus tidak ada");
+                System.out.println("Tidak ada dalam Rantai Makanan");
                 return root;
             }
         }
@@ -213,7 +196,22 @@ public class BstNode {
             switch (pil) {
 
                 case 1:
+                    /*                 
+                    System.out.println("Berikut Nomor Hewan Dalam Rantai Makanan yang disajikan dalam bentuk Tree");
+                    System.out.println("\n");
+                    System.out.println("                       50                                                ");
+                    System.out.println("                 /             \                                         ");
+                    System.out.println(" ");
+                    System.out.println("              25                 75                                      ");
+                    System.out.println("             /  \               /  \                                     ");
+                    System.out.println(" ");
+                    System.out.println("         8         30       60        85                                 ");
+                    //System.out.println("      / \       / \       / \       / \                                ");
+                    System.out.println(" ");
+                    System.out.println("       3   10   27   35   55   70   80   90                              "); 
+                     */
 
+                    System.out.println("\n");
                     System.out.println("Ada 3 Pilihan tampilan:");
                     System.out.println("1) Post Order");
                     System.out.println("2) In Order");
@@ -267,13 +265,16 @@ public class BstNode {
                     break;
 
                 case 4:
-
+                    System.out.println("WARNING!!");
+                    System.out.println("Menghapus hewan mengakibatkan predator alaminya ikut punah");
                     System.out.print("Masukkan nomor: ");
                     no = input.nextInt();
                     if (no == 50) {
-                        System.out.println("DILARANG, karena produsen");
+                        System.out.println("DILARANG! karena produsen!");
+                        System.out.println("SEMUA BISA PUNAH!");
+                    } else {
+                        BstNode.deleteNode(Tree.root, no);
                     }
-                    BstNode.deleteNode(Tree.root, no);
                     System.out.println("\n");
                     break;
 
